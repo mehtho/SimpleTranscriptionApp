@@ -1,5 +1,5 @@
-from fastapi import FastAPI
 from asr_api import router as asr_router
+from fastapi import FastAPI
 
 app = FastAPI()
 
