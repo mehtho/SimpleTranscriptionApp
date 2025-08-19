@@ -8,16 +8,22 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Add the "unzip" program
 (sudo apt-get update && \
-    sudo apt-get install unzip)
+    sudo apt-get install unzip ffmpeg)
 
-# Download the test dataset
-curl -L -o common_voice.zip "https://www.dropbox.com/scl/fi/i9yvfqpf7p8uye5o8k1sj/common_voice.zip?rlkey=lz3dtjuhekc3xw4jnoeoqy5yu&e=1&dl=1"
-unzip common_voice.zip -d test_data
-# rm common_voice.zip
+# Download the test dataset if it does not already exist
+if [ ! -d "test_data" ]; then
+  curl -L -o common_voice.zip "https://www.dropbox.com/scl/fi/i9yvfqpf7p8uye5o8k1sj/common_voice.zip?rlkey=lz3dtjuhekc3xw4jnoeoqy5yu&e=1&dl=1"
+  unzip common_voice.zip -d test_data
+  rm common_voice.zip   # optional cleanup
+else
+  echo "Skipping download: test_data already exists"
+fi
+
 
 # Install deps from requirements.txt to UV in the asr microservice directory
+# By default, for development, installs test and inference dependencies
 (cd asr && \
-    uv sync --extra testing)
+    uv sync --all-extras)
 
 # Install linters dependencies
 (cd linter && \

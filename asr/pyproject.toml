@@ -10,6 +10,14 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# Enables unit and end to end tests
 testing = [
-    "pytest>=8.0"
+    "pytest==8.4.1"
+]
+
+# Enables inference, disable during fast unit tests that exclude heavy dependencies
+inference = [
+    "transformers==4.55.2",
+    "torch==2.8.0",
+    "torchaudio==2.8.0"
 ]
