@@ -209,4 +209,7 @@ __marimo__/
 # =========== CUSTOM gitignores start ===========
 # UV's .venv directory
 .venv
+
+__pycache__
+
 # =========== CUSTOM gitignores end.  ===========

@@ -3,7 +3,8 @@ name = "simpletranscriptionapp"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.13"
 dependencies = [
-    "fastapi[standard]>=0.116.1",
+    "fastapi[standard]==0.116.1",
+    "uvicorn[standard]==0.35.0",
 ]
