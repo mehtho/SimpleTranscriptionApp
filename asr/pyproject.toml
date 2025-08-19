@@ -19,5 +19,6 @@ testing = [
 inference = [
     "transformers==4.55.2",
     "torch==2.8.0",
-    "torchaudio==2.8.0"
+    "torchaudio==2.8.0",
+    "torchcodec==0.6.0"
 ]

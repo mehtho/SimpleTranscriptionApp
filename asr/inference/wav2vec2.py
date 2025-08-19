@@ -3,7 +3,6 @@ import io
 
 import torch
 import torchaudio
-from enums.file_formats import MimeTypes
 from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
 
 MODEL_PATH = "facebook/wav2vec2-large-960h"
@@ -18,20 +17,16 @@ class Wav2vec2:
         self.model = Wav2Vec2ForCTC.from_pretrained(MODEL_PATH)
         self.model.eval()
 
-    def transcribe(self, audio_file: bytes, file_type:str) -> dict[str, str | float]:
+    def transcribe(self, audio_file: bytes) -> dict[str, str | float]:
         """Transcribes audio files from /asr endpoint.
 
         Receives audio_file bytes and the file extension to do appropriate
         conversions before transcribing.
-
-        Will raise ValueError on unsupported file_type (MIME Type)
         """
-        mime_type = MimeTypes(file_type)    # Raises ValueError for invalid MIME types
         audio_file_bytes = io.BytesIO(audio_file)
 
         # Load file into torchaudio with corresponding file type
-        waveform, sr = torchaudio.load(audio_file_bytes, format="mp3"
-                                       if mime_type == MimeTypes.MP3 else "wav")
+        waveform, sr = torchaudio.load_with_torchcodec(audio_file_bytes)
 
         # Convert to audio to mono
         if waveform.shape[0] > 1:
