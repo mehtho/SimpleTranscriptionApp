@@ -1,4 +1,5 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI
+from asr_api import router as asr_router
 
 app = FastAPI()
 
@@ -6,6 +7,5 @@ app = FastAPI()
 def ping():
     return "pong"
 
-@app.post("/asr")
-async def asr(file: UploadFile = File(...)):
-    return {"transcription": "TODO", "duration": 10}
+# include the ASR routes
+app.include_router(asr_router)
