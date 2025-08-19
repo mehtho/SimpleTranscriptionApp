@@ -205,3 +205,8 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# =========== CUSTOM gitignores start ===========
+# UV's .venv directory
+.venv
+# =========== CUSTOM gitignores end.  ===========
