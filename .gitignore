@@ -213,6 +213,10 @@ __marimo__/
 # models directory
 models
 
+# Downloaded testing audio dataset
+test_data
+common_voice.zip
+
 __pycache__
 
 # =========== CUSTOM gitignores end.  ===========
