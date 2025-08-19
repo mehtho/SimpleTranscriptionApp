@@ -14,4 +14,4 @@ async def asr(file: Annotated[UploadFile, File()] = ...) -> dict[str, str | floa
 
     Returns a json response based on the returned dict
     """
-    return asr_model.transcribe(await file.read(), file.content_type)
+    return asr_model.transcribe(await file.read())
