@@ -40,7 +40,26 @@ target-version = "py313"
 # Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
 # McCabe complexity (`C901`) by default.
 select = ["ALL"]
-ignore = []
+ignore = [
+    "D104", # Missing docstring in public package
+    "INP001", # File is part of an implicit namespace package. Add an `__init__.py`.
+    "B008", # Interferes with FastAPI dependency injection
+
+    "COM812",  # missing-trailing-comma
+    "CPY001",  # Missing copyright notice at top of file
+    "D100",    # Missing docstring in public module
+    "D104",    # Missing docstring in public package
+    "D203",    # blank line required before class docstring
+    "D211",    # no-blank-line-before-class
+    "D213",    # multi-line-summary-second-line
+    "EM101",   # raw-string-in-exception
+    "FIX002",  # line-contains-todo
+    "ISC001",  # Conflicts with formatter ruff
+    "PLR0904", # Too many public methods (... > 20)
+    "TD002",   # Missing author in TODO `# TODO(<author_name>): ...`
+    "TD003",   # missing-todo-link
+    "TRY003",  # raise-vanilla-args
+]
 
 [lint.per-file-ignores]
 "test*" = ["S101"]
