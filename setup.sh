@@ -1,6 +1,9 @@
 # Installs UV. Restart terminal afterwards to apply changes.
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
+# Clone the search-ui submodule
+git submodule update --init --recursive
+
 # Downloads huggingface models
 (mkdir -p models && \
     cd models && \
@@ -8,7 +11,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Add the "unzip" program
 (sudo apt-get update && \
-    sudo apt-get install unzip)
+    sudo apt-get install unzip npm ffmpeg)
 
 # Download the test dataset if it does not already exist
 if [ ! -d "test_data" ]; then
@@ -18,7 +21,6 @@ if [ ! -d "test_data" ]; then
 else
   echo "Skipping download: test_data already exists"
 fi
-
 
 # Install deps from requirements.txt to UV in the asr microservice directory
 # By default, for development, installs test and inference dependencies

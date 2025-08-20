@@ -1,0 +1,3 @@
+[submodule "search-ui/app"]
+	path = search-ui/app
+	url = https://github.com/elastic/app-search-reference-ui-react.git

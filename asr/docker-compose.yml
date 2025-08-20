@@ -1,7 +1,7 @@
 services:
   asr_api:
     build:
-      context: ./asr
+      context: .
       dockerfile: Dockerfile
     image: asr_api
     container_name: asr_api
