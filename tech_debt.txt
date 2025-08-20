@@ -1,0 +1,2 @@
+1. FFmpeg installation is bulkier than it needs to be
+2. Duration, although not asked for, is not recorded
