@@ -4,15 +4,24 @@ WORKDIR /app
 
 COPY pyproject.toml uv.lock* ./
 
-# Don't install testing deps
-RUN uv sync --extra inference --frozen
+# Do not copy over test deps
+RUN uv sync --extra inference --locked --no-cache
 
-COPY app/ .
-
-FROM debian:bookworm-slim AS final
+FROM ghcr.io/astral-sh/uv:debian-slim AS final
 
 WORKDIR /app
 
+# Copy only code and .venv
 COPY --from=builder /app/.venv /app/.venv
+COPY app/ ./
 
-CMD ["/app/.venv/bin/uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8001"]
+# Install ffmpeg
+# Could be done in builder, but links break when copying
+# Try fixing with: https://github.com/jrottenberg/ffmpeg/issues/99#issuecomment-396659630
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ffmpeg && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN uv venv --allow-existing
+
+ENTRYPOINT ["uv", "run", "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8001"]

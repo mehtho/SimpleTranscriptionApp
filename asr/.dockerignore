@@ -1,13 +1,12 @@
-# Ignore test files
-tests
-pytest.ini
-run_tests.sh
+# Ignore test files everywhere
+**/tests
+**/pytest.ini
+**/run_tests.sh
 
-# Ignore generated directories from dev env
-__pycache__
-.pytest_cache
-.venv
+# Ignore generated directories from dev env everywhere
+**/__pycache__
+**/.pytest_cache
+**/.venv
 
-# Other unnecessary files
-requirements.txt
-
+# Other unnecessary files everywhere
+**/requirements.txt
