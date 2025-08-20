@@ -45,7 +45,7 @@ class Wav2vec2:
         )
 
         # Perform inference
-        with torch.no_grad():
+        with torch.inference_mode():
             logits = self.model(inputs.input_values).logits
             predicted_ids = torch.argmax(logits, dim=-1)
             transcription = self.processor.batch_decode(predicted_ids)[0]

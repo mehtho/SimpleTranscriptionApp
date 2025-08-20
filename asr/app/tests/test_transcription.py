@@ -9,7 +9,9 @@ client = TestClient(app)
 
 def test_asr_simple() -> None:
     """Sends the short_audio.mp3 file to /asr endpoint to test transcription."""
-    with Path.open("tests/short_audio.mp3", "rb") as f:
+    test_audio = Path(__file__).parent / "short_audio.mp3"
+
+    with test_audio.open("rb") as f:
         response = client.post("/asr",
                                files={"file": ("short_audio.mp3", f, "audio/mpeg")})
 

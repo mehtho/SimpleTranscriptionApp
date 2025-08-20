@@ -217,6 +217,9 @@ models
 test_data
 common_voice.zip
 
+# Temp files
+temp-cv-valid-dev.csv
+
 __pycache__
 
 # =========== CUSTOM gitignores end.  ===========

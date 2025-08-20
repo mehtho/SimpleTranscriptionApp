@@ -5,8 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "fastapi[standard]==0.116.1",
-    "uvicorn[standard]==0.35.0",
+    "fastapi[standard]==0.115.6",
 ]
 
 [project.optional-dependencies]
@@ -22,3 +21,11 @@ inference = [
     "torchaudio==2.8.0",
     "torchcodec==0.6.0"
 ]
+
+[tool.uv.sources]
+torch = { index = "pytorch" }
+
+# Important: Keeps image size low since only CPU inference is used (No CUDA etc.)
+[[tool.uv.index]]
+name = "pytorch"
+url = "https://download.pytorch.org/whl/cpu"
