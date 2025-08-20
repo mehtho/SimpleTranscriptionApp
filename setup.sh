@@ -8,7 +8,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Add the "unzip" program
 (sudo apt-get update && \
-    sudo apt-get install unzip ffmpeg)
+    sudo apt-get install unzip)
 
 # Download the test dataset if it does not already exist
 if [ ! -d "test_data" ]; then
