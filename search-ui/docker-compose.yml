@@ -1,0 +1,11 @@
+services:
+  search-ui:
+    build: .
+    ports:
+      - "3000:80"
+    networks:
+      - asr
+
+networks:
+  asr:
+    driver: bridge

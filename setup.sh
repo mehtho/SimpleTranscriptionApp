@@ -11,7 +11,7 @@ git submodule update --init --recursive
 
 # Add the "unzip" program
 (sudo apt-get update && \
-    sudo apt-get install unzip npm ffmpeg)
+    sudo apt-get install unzip ffmpeg)
 
 # Download the test dataset if it does not already exist
 if [ ! -d "test_data" ]; then
@@ -21,6 +21,12 @@ if [ ! -d "test_data" ]; then
 else
   echo "Skipping download: test_data already exists"
 fi
+
+# Installs node js for search-ui
+sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+
+\. "$HOME/.nvm/nvm.sh"
+nvm install 22
 
 # Install deps from requirements.txt to UV in the asr microservice directory
 # By default, for development, installs test and inference dependencies
