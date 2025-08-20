@@ -3,6 +3,7 @@ import csv
 from pathlib import Path
 
 import requests
+from tqdm import tqdm
 
 IN_CSV = "../test_data/cv-valid-dev.csv"
 TEMP_CSV = "./temp-cv-valid-dev.csv"
@@ -22,6 +23,8 @@ def call_api(audio_path: str, url: str = "http://localhost:8001/asr") -> str:
 def main() -> None:
     """Read the input CSV, adding the generated_text col from calling the API."""
     try:
+        total_rows = sum(1 for _ in open(IN_CSV, encoding="utf-8")) - 1
+
         with Path.open(IN_CSV, "r", newline="", encoding="utf-8") as file_in, \
             Path.open(TEMP_CSV, "w", newline="", encoding="utf-8") as file_out:
 
@@ -34,9 +37,8 @@ def main() -> None:
             writer = csv.DictWriter(file_out, fieldnames=fieldnames)
             writer.writeheader()
 
-            for _, row in enumerate(reader, start=1):
+            for row in tqdm(reader, total=total_rows, desc="Processing", unit="row"):
                 mp3_path = "cv-valid-dev/" + row.get(FILE_NAME_COL).strip()
-
                 row["generated_text"] = call_api(TEST_DATA_DIR + mp3_path)
                 writer.writerow(row)
 
