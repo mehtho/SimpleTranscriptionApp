@@ -23,7 +23,7 @@ def call_api(audio_path: str, url: str = "http://localhost:8001/asr") -> str:
 def main() -> None:
     """Read the input CSV, adding the generated_text col from calling the API."""
     try:
-        total_rows = sum(1 for _ in open(IN_CSV, encoding="utf-8")) - 1
+        total_rows = sum(1 for _ in Path.open(IN_CSV, encoding="utf-8")) - 1
 
         with Path.open(IN_CSV, "r", newline="", encoding="utf-8") as file_in, \
             Path.open(TEMP_CSV, "w", newline="", encoding="utf-8") as file_out:
