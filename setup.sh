@@ -1,9 +1,6 @@
 # Installs UV. Restart terminal afterwards to apply changes.
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Clone the search-ui submodule
-git submodule update --init --recursive
-
 # Downloads huggingface models
 (mkdir -p models && \
     cd models && \
