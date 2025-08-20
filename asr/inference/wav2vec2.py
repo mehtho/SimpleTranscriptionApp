@@ -52,5 +52,5 @@ class Wav2vec2:
 
             return {
                 "transcription": transcription,
-                "duration": waveform.shape[1] / SAMPLING_RATE,
+                "duration": round(waveform.shape[1] / SAMPLING_RATE, 1)
             }

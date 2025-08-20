@@ -12,7 +12,9 @@ def test_asr_simple() -> None:
     with Path.open("tests/short_audio.mp3", "rb") as f:
         response = client.post("/asr",
                                files={"file": ("short_audio.mp3", f, "audio/mpeg")})
-    assert response.status_code == HTTPStatus.OK
+
     data = response.json()
+
+    assert response.status_code == HTTPStatus.OK
     assert "transcription" in data
     assert "duration" in data
