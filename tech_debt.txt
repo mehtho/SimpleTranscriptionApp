@@ -2,3 +2,4 @@
 2. Duration, although not asked for, is not recorded
 3. Add workspaces to support multiple interpreters
 4. Extract strings into settings
+5. Of those strings, change IPs and localhosts into .env settings

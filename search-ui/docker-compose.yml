@@ -1,11 +1,11 @@
 services:
   search-ui:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: search-ui
+    environment:
+      - NODE_ENV=production
     ports:
-      - "3000:80"
-    networks:
-      - asr
+      - "3000:3000"
 
-networks:
-  asr:
-    driver: bridge

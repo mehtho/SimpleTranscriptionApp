@@ -1,0 +1,4 @@
+[submodule "search-ui/app"]
+	path = search-ui/app
+	url = https://github.com/mehtho/app-search-reference-ui-react.git
+	branch = asr-custom
