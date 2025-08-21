@@ -26,6 +26,7 @@ else:
     resp = es_bootstrap.security.create_api_key(name="search-ui-key", role_descriptors={})
     api_key = resp["encoded"]
     api_key_path.write_text(api_key)
+    print(api_key)
 
 # Reconnect using API key
 es = Elasticsearch(

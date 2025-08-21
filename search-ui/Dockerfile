@@ -18,17 +18,14 @@ FROM node:22
 
 WORKDIR /app
 
-# Copy build artifacts and server
+# Copy build artifacts and server code
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/node_modules ./node_modules
 COPY app/proxy.js ./proxy.js
-
-# Install required global tools
-RUN yarn global add serve concurrently express @elastic/search-ui-elasticsearch-connector
 
 EXPOSE 3000
 
 ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 
-# Run both frontend and proxy
-CMD ["concurrently", "serve -s build -l 3000", "node proxy.js"]
+# Start only Express proxy (serves API + frontend)
+CMD ["node", "proxy.js"]
