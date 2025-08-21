@@ -1,6 +1,8 @@
 1. FFmpeg installation is bulkier than it needs to be
-2. Duration, although not asked for, is not recorded
+2. Duration, although not asked for, is not recorded                [ADDED]
 3. Add workspaces to support multiple interpreters
 4. Extract strings into settings
 5. Of those strings, change IPs and localhosts into .env settings
 6. Test that closing 9200 works
+7. Have a mini docker compose for each deliverable
+8. Add all the search criteria to the front end

@@ -18,7 +18,9 @@ def call_api(audio_path: str, url: str = "http://localhost:8001/asr") -> str:
         resp = requests.post(url, files=files, timeout=60)
         resp.raise_for_status()
 
-    return resp.json()["transcription"]
+        resp_json = resp.json()
+
+    return resp_json["transcription"], resp_json["duration"]
 
 def main() -> None:
     """Read the input CSV, adding the generated_text col from calling the API."""
@@ -39,7 +41,9 @@ def main() -> None:
 
             for row in tqdm(reader, total=total_rows, desc="Processing", unit="row"):
                 mp3_path = "cv-valid-dev/" + row.get(FILE_NAME_COL).strip()
-                row["generated_text"] = call_api(TEST_DATA_DIR + mp3_path)
+                row["generated_text"], row["duration"] = call_api(
+                    TEST_DATA_DIR + mp3_path)
+
                 writer.writerow(row)
 
             Path(TEMP_CSV).replace(IN_CSV)
