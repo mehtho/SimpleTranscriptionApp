@@ -1,7 +1,7 @@
 services:
   search-ui:
     build:
-      context: .
+      context: ./search-ui
       dockerfile: Dockerfile
     container_name: search-ui
     environment:
@@ -61,7 +61,7 @@ services:
 
   uploader:
     build:
-      context: .
+      context: ./elastic-backend
       dockerfile: Dockerfile
     depends_on:
       es01:
