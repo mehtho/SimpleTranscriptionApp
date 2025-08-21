@@ -8,6 +8,9 @@ from elasticsearch import Elasticsearch, helpers
 api_key_path = Path("keys/api-key.txt")
 api_key = None
 
+# Use environment for ES host and port
+ES_PORT = os.environ.get("ES_PORT", "9200")
+
 # If API key already exists, read it
 if api_key_path.exists() and api_key_path.stat().st_size > 0:
     api_key = api_key_path.read_text().strip()
@@ -18,7 +21,7 @@ else:
         raise RuntimeError("ELASTIC_PASSWORD environment variable not set")
 
     es_bootstrap = Elasticsearch(
-        "https://es01:9200",
+        f"https://es01:{ES_PORT}",
         http_auth=("elastic", elastic_password),
         verify_certs=False,
         ssl_show_warn=False,
@@ -37,7 +40,7 @@ else:
 
 # Reconnect using base64 API key
 es = Elasticsearch(
-    "https://es01:9200",
+    f"https://es01:{ES_PORT}",
     api_key=api_key,
     verify_certs=False,
     ssl_show_warn=False,

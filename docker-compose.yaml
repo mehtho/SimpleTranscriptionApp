@@ -6,8 +6,11 @@ services:
     container_name: search-ui
     environment:
       - NODE_ENV=production
+      - SYS_PUBLIC_IP=${SYS_PUBLIC_IP:-172.191.12.215}
+      - SEARCH_UI_PORT=${SEARCH_UI_PORT:-3000}
+      - ES_PORT=${ES_PORT:-9200}
     ports:
-      - "3000:3000"
+      - "${SEARCH_UI_PORT:-3000}:${SEARCH_UI_PORT:-3000}"
     depends_on:
       - es01
     volumes:
@@ -16,13 +19,13 @@ services:
       - asr
     
   setup:
-    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION:-7.10.2}
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
     user: "0"
     command: >
       bash -c '
-        if [ x${ELASTIC_PASSWORD} == x ]; then
+        if [ x${ELASTIC_PASSWORD:-elasticpassword} == x ]; then
           echo "Set the ELASTIC_PASSWORD environment variable in the .env file";
           exit 1;
         fi;
@@ -65,7 +68,7 @@ services:
       retries: 120
 
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION:-7.10.2}
     container_name: es01
     environment:
       - node.name=es01
@@ -78,7 +81,7 @@ services:
       - xpack.security.transport.ssl.key=certs/es01/es01.key
       - xpack.security.transport.ssl.certificate=certs/es01/es01.crt
 
-      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD:-elasticpassword}
 
     ulimits:
       memlock:
@@ -89,7 +92,7 @@ services:
       - certs:/usr/share/elasticsearch/config/certs
       - ./elastic-backend/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     ports:
-      - "9200:9200"
+      - "${ES_PORT:-9200}:9200"
     networks:
       - asr
     healthcheck:
@@ -103,7 +106,7 @@ services:
       retries: 5
 
   es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION:-7.10.2}
     container_name: es02
     environment:
       - node.name=es02
@@ -116,7 +119,7 @@ services:
       - xpack.security.transport.ssl.key=certs/es02/es02.key
       - xpack.security.transport.ssl.certificate=certs/es02/es02.crt
 
-      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD:-elasticpassword}
 
     ulimits:
       memlock:
@@ -153,7 +156,7 @@ services:
       - ./elastic-backend/cv-valid-dev.csv:/app/cv-valid-dev.csv:ro
       - generated-keys:/app/keys
     environment:
-      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD:-elasticpassword}
 
 volumes:
   certs:
