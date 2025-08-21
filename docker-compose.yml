@@ -1,4 +1,18 @@
 services:
+  asr_api:
+    build:
+      context: ./asr
+      dockerfile: Dockerfile
+    image: asr_api
+    container_name: asr_api
+    ports:
+      - "${ASR_PORT:-8001}:8001"
+    volumes:
+      - ./models:/models
+    restart: unless-stopped
+    networks:
+      - asr
+
   search-ui:
     build:
       context: ./search-ui

@@ -5,5 +5,5 @@
 5. Of those strings, change IPs and localhosts into .env settings
 6. Test that closing 9200 works
 7. Have a mini docker compose for each deliverable
-8. Add all the search criteria to the front end
-9. Suspect the search-ui needs to wait for the API key to generate
+8. Must all the search criteria to the front end                    [ADDED]
+9. The search-ui needs to wait for the API key to generate          [FIXED]

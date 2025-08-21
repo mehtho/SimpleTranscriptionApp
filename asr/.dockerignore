@@ -8,5 +8,8 @@
 **/.pytest_cache
 **/.venv
 
+# Ignore models directory
+**/.models
+
 # Other unnecessary files everywhere
 **/requirements.txt
