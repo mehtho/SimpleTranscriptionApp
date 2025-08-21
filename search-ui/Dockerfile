@@ -4,14 +4,14 @@ FROM node:22 AS builder
 WORKDIR /app
 
 # Copy only package files first for caching
-COPY app/package*.json ./
-RUN npm install
+COPY app/package.json app/yarn.lock ./
+RUN yarn install --frozen-lockfile
 
 # Copy all source
 COPY app/ .
 
 # Build the React app
-RUN npm run build
+RUN yarn build
 
 # Runtime
 FROM node:22
@@ -22,7 +22,7 @@ WORKDIR /app
 COPY --from=builder /app/build ./build
 
 # Serve static files
-RUN npm install -g serve
+RUN yarn global add serve
 
 EXPOSE 3000
 CMD ["serve", "-s", "build", "-l", "3000"]
