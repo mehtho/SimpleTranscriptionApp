@@ -3,3 +3,4 @@
 3. Add workspaces to support multiple interpreters
 4. Extract strings into settings
 5. Of those strings, change IPs and localhosts into .env settings
+6. Test that closing 9200 works

@@ -26,7 +26,9 @@ COPY app/proxy.js ./proxy.js
 # Install required global tools
 RUN yarn global add serve concurrently express @elastic/search-ui-elasticsearch-connector
 
-EXPOSE 3000 3001
+EXPOSE 3000
 
-# Run both frontend (3000) and proxy (3001)
+ENV NODE_TLS_REJECT_UNAUTHORIZED=0
+
+# Run both frontend and proxy
 CMD ["concurrently", "serve -s build -l 3000", "node proxy.js"]
