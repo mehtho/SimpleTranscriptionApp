@@ -45,8 +45,38 @@ es = Elasticsearch(
 
 index_name = "cv-transcriptions"
 
-if not es.indices.exists(index=index_name):
-    with Path("cv-valid-dev.csv").open(newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        actions = ({"_index": index_name, "_source": row} for row in reader)
+# Define explicit mapping
+mapping = {
+    "mappings": {
+        "properties": {
+            "generated_text": {"type": "text"},
+            "age": {"type": "keyword"},
+            "gender": {"type": "keyword"},
+            "accent": {"type": "keyword"},
+            "duration": {"type": "float"}
+        }
+    }
+}
+
+# Drop old index if it exists
+if es.indices.exists(index=index_name):
+    es.indices.delete(index=index_name)
+
+# Create new index with mapping
+es.indices.create(index=index_name, body=mapping)
+
+# Bulk insert CSV rows with proper type conversion
+with Path("cv-valid-dev.csv").open(newline="", encoding="utf-8") as f:
+    reader = csv.DictReader(f)
+    actions = []
+    for row in reader:
+        # Ensure duration is numeric
+        if "duration" in row and row["duration"] != "":
+            try:
+                row["duration"] = float(row["duration"])
+            except ValueError:
+                row["duration"] = None
+        actions.append({"_index": index_name, "_source": row})
+
+    if actions:
         helpers.bulk(es, actions)
