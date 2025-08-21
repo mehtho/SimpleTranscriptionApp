@@ -1,3 +1,4 @@
+import base64
 import csv
 import os
 from pathlib import Path
@@ -18,17 +19,23 @@ else:
 
     es_bootstrap = Elasticsearch(
         "https://es01:9200",
-        basic_auth=("elastic", elastic_password),
+        http_auth=("elastic", elastic_password),
         verify_certs=False,
         ssl_show_warn=False,
     )
 
-    resp = es_bootstrap.security.create_api_key(name="search-ui-key", role_descriptors={})
-    api_key = resp["encoded"]
-    api_key_path.write_text(api_key)
-    print(api_key)
+    resp = es_bootstrap.security.create_api_key(body={
+        "name": "search-ui-key",
+        "role_descriptors": {}
+    })
 
-# Reconnect using API key
+    # Build base64-encoded id:api_key string
+    raw = f"{resp['id']}:{resp['api_key']}"
+    api_key = base64.b64encode(raw.encode()).decode()
+
+    api_key_path.write_text(api_key)
+
+# Reconnect using base64 API key
 es = Elasticsearch(
     "https://es01:9200",
     api_key=api_key,

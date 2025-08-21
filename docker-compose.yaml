@@ -12,6 +12,8 @@ services:
       - es01
     volumes:
       - generated-keys:/app/keys:ro
+    networks:
+      - asr
     
   setup:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
