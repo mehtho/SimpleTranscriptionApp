@@ -105,8 +105,6 @@ services:
       - es01-data:/usr/share/elasticsearch/data
       - certs:/usr/share/elasticsearch/config/certs
       - ./elastic-backend/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
-    ports:
-      - "${ES_PORT:-9200}:9200"
     networks:
       - asr
     healthcheck:
