@@ -5,7 +5,7 @@ import torch
 import torchaudio
 from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
 
-MODEL_PATH = "models/wav2vec2-large-960h"
+MODEL_PATH = "../models/wav2vec2-large-960h"
 SAMPLING_RATE = 16000 # 16 KHz sampling rate
 
 class Wav2vec2:
