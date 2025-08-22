@@ -1,7 +1,7 @@
 variable "prefix" {
   description = "Resource name prefix"
   type        = string
-  default     = "asr-demo"
+  default     = "asr-demonstration"
 }
 
 variable "location" {

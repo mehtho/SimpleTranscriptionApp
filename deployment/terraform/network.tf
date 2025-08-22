@@ -41,8 +41,8 @@ resource "azurerm_network_security_group" "nsg" {
     destination_address_prefix = "*"
   }
 
-  security_rule {
-    name                       = "allow-search-ui"
+    security_rule {
+    name                       = "allow-searchui"
     priority                   = 1003
     direction                  = "Inbound"
     access                     = "Allow"
@@ -78,103 +78,9 @@ resource "azurerm_network_security_group" "nsg" {
   }
 }
 
-# --- Load Balancer probes ---
-resource "azurerm_lb_probe" "ssh" {
-  name                = "ssh-probe"
-  loadbalancer_id     = azurerm_lb.lb.id
-  protocol            = "Tcp"
-  port                = 22
-  interval_in_seconds = 5
-  number_of_probes    = 2
-}
-
-resource "azurerm_lb_probe" "http" {
-  name                = "http-probe"
-  loadbalancer_id     = azurerm_lb.lb.id
-  protocol            = "Tcp"
-  port                = 80
-  interval_in_seconds = 5
-  number_of_probes    = 2
-}
-
-resource "azurerm_lb_probe" "search_ui" {
-  name                = "search-ui-probe"
-  loadbalancer_id     = azurerm_lb.lb.id
-  protocol            = "Tcp"
-  port                = 3000
-  interval_in_seconds = 5
-  number_of_probes    = 2
-}
-
-resource "azurerm_lb_probe" "asr" {
-  name                = "asr-probe"
-  loadbalancer_id     = azurerm_lb.lb.id
-  protocol            = "Tcp"
-  port                = 8001
-  interval_in_seconds = 5
-  number_of_probes    = 2
-}
-
-# --- Load Balancer rules ---
-resource "azurerm_lb_rule" "ssh" {
-  name                           = "ssh"
-  loadbalancer_id                = azurerm_lb.lb.id
-  protocol                       = "Tcp"
-  frontend_port                  = 22
-  backend_port                   = 22
-  frontend_ip_configuration_name = "PublicFrontEnd"
-  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.bepool.id]
-  probe_id                       = azurerm_lb_probe.ssh.id
-}
-
-resource "azurerm_lb_rule" "http" {
-  name                           = "http"
-  loadbalancer_id                = azurerm_lb.lb.id
-  protocol                       = "Tcp"
-  frontend_port                  = 80
-  backend_port                   = 80
-  frontend_ip_configuration_name = "PublicFrontEnd"
-  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.bepool.id]
-  probe_id                       = azurerm_lb_probe.http.id
-}
-
-resource "azurerm_lb_rule" "search_ui" {
-  name                           = "search-ui"
-  loadbalancer_id                = azurerm_lb.lb.id
-  protocol                       = "Tcp"
-  frontend_port                  = 3000
-  backend_port                   = 3000
-  frontend_ip_configuration_name = "PublicFrontEnd"
-  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.bepool.id]
-  probe_id                       = azurerm_lb_probe.search_ui.id
-}
-
-resource "azurerm_lb_rule" "asr" {
-  name                           = "asr"
-  loadbalancer_id                = azurerm_lb.lb.id
-  protocol                       = "Tcp"
-  frontend_port                  = 8001
-  backend_port                   = 8001
-  frontend_ip_configuration_name = "PublicFrontEnd"
-  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.bepool.id]
-  probe_id                       = azurerm_lb_probe.asr.id
-}
-
-resource "azurerm_network_interface" "nic" {
-  name                = "${var.prefix}-nic"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-
-  ip_configuration {
-    name                                      = "ipcfg"
-    subnet_id                                 = azurerm_subnet.subnet.id
-    private_ip_address_allocation             = "Dynamic"
-  }
-}
-
-resource "azurerm_lb_backend_address_pool" "bepool" {
-  name            = "${var.prefix}-bepool"
-  loadbalancer_id = azurerm_lb.lb.id
+resource "azurerm_subnet_network_security_group_association" "subnet_nsg" {
+  subnet_id                 = azurerm_subnet.subnet.id
+  network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
 resource "azurerm_public_ip" "lb_pip" {
@@ -202,4 +108,105 @@ resource "azurerm_lb" "lb" {
   }
 }
 
+resource "azurerm_lb_backend_address_pool" "bepool" {
+  name            = "${var.prefix}-bepool"
+  loadbalancer_id = azurerm_lb.lb.id
+}
 
+resource "azurerm_network_interface" "nic" {
+  name                = "${var.prefix}-nic"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+
+  ip_configuration {
+    name                                      = "ipcfg"
+    subnet_id                                 = azurerm_subnet.subnet.id
+    private_ip_address_allocation             = "Dynamic"
+  }
+}
+
+resource "azurerm_network_interface_backend_address_pool_association" "nic_pool" {
+  network_interface_id    = azurerm_network_interface.nic.id
+  ip_configuration_name   = "ipcfg"
+  backend_address_pool_id = azurerm_lb_backend_address_pool.bepool.id
+}
+
+resource "azurerm_lb_probe" "ssh" {
+  name                = "ssh-probe"
+  loadbalancer_id     = azurerm_lb.lb.id
+  protocol            = "Tcp"
+  port                = 22
+  interval_in_seconds = 5
+  number_of_probes    = 2
+}
+
+resource "azurerm_lb_probe" "http" {
+  name                = "http-probe"
+  loadbalancer_id     = azurerm_lb.lb.id
+  protocol            = "Tcp"
+  port                = 80
+  interval_in_seconds = 5
+  number_of_probes    = 2
+}
+
+resource "azurerm_lb_probe" "searchui" {
+  name                = "searchui-probe"
+  loadbalancer_id     = azurerm_lb.lb.id
+  protocol            = "Tcp"
+  port                = 3000
+  interval_in_seconds = 5
+  number_of_probes    = 2
+}
+
+resource "azurerm_lb_probe" "asr" {
+  name                = "asr-probe"
+  loadbalancer_id     = azurerm_lb.lb.id
+  protocol            = "Tcp"
+  port                = 8001
+  interval_in_seconds = 5
+  number_of_probes    = 2
+}
+
+resource "azurerm_lb_rule" "ssh" {
+  name                           = "ssh"
+  loadbalancer_id                = azurerm_lb.lb.id
+  protocol                       = "Tcp"
+  frontend_port                  = 22
+  backend_port                   = 22
+  frontend_ip_configuration_name = "PublicFrontEnd"
+  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.bepool.id]
+  probe_id                       = azurerm_lb_probe.ssh.id
+}
+
+resource "azurerm_lb_rule" "http" {
+  name                           = "http"
+  loadbalancer_id                = azurerm_lb.lb.id
+  protocol                       = "Tcp"
+  frontend_port                  = 80
+  backend_port                   = 80
+  frontend_ip_configuration_name = "PublicFrontEnd"
+  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.bepool.id]
+  probe_id                       = azurerm_lb_probe.http.id
+}
+
+resource "azurerm_lb_rule" "searchui" {
+  name                           = "searchui"
+  loadbalancer_id                = azurerm_lb.lb.id
+  protocol                       = "Tcp"
+  frontend_port                  = 3000
+  backend_port                   = 3000
+  frontend_ip_configuration_name = "PublicFrontEnd"
+  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.bepool.id]
+  probe_id                       = azurerm_lb_probe.searchui.id
+}
+
+resource "azurerm_lb_rule" "asr" {
+  name                           = "asr"
+  loadbalancer_id                = azurerm_lb.lb.id
+  protocol                       = "Tcp"
+  frontend_port                  = 8001
+  backend_port                   = 8001
+  frontend_ip_configuration_name = "PublicFrontEnd"
+  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.bepool.id]
+  probe_id                       = azurerm_lb_probe.asr.id
+}
