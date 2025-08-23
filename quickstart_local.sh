@@ -1,3 +1,6 @@
+# Copy the .env file
+cp .env.example .env
+
 # Download models and test data
 sh dl_models_and_dataset.sh
 
