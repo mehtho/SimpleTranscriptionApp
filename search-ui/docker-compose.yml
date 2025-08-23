@@ -1,0 +1,194 @@
+###############################################################################
+# Docker Compose for search-ui (and the elastic backend it depends on)
+#
+# Services:
+#   - search-ui : React-based frontend (served on ${SEARCH_UI_PORT:-3000}),
+#                 connects to Elasticsearch for queries and results.
+# 
+# Dependent Services:
+#   - uploader  : Backend service to upload CSV data into Elasticsearch,
+#                 requires ES cluster to be healthy.
+#
+#   - setup     : One-off initialization job to generate CA and TLS certs
+#                 for Elasticsearch nodes (es01, es02).
+#
+#   - es01      : First Elasticsearch node (master-eligible, data node).
+#
+#   - es02      : Second Elasticsearch node (master-eligible, data node).
+#
+# Volumes:
+#   certs, es01-data, es02-data, generated-keys
+#
+# Network:
+#   asr (bridge)
+###############################################################################
+
+services:
+  search-ui:
+    image: ghcr.io/mehtho/search-ui:latest
+    build:
+      context: ./search-ui
+      dockerfile: Dockerfile
+    container_name: search-ui
+    environment:
+      - NODE_ENV=production
+      - SYS_PUBLIC_IP=${SYS_PUBLIC_IP:-172.191.12.215}
+      - SEARCH_UI_PORT=${SEARCH_UI_PORT:-3000}
+      - ES_PORT=${ES_PORT:-9200}
+    ports:
+      - "${SEARCH_UI_PORT:-3000}:${SEARCH_UI_PORT:-3000}"
+    depends_on:
+      - es01
+    volumes:
+      - generated-keys:/app/keys:ro
+    networks:
+      - asr
+
+  uploader:
+    image: ghcr.io/mehtho/uploader:latest
+    build:
+      context: ../elastic-backend
+      dockerfile: Dockerfile
+    depends_on:
+      es01:
+        condition: service_healthy
+      es02:
+        condition: service_healthy
+    networks:
+      - asr
+    volumes:
+      - ../elastic-backend/cv-valid-dev.csv:/app/cv-valid-dev.csv:ro
+      - generated-keys:/app/keys
+    environment:
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD:-elasticpassword}
+
+  setup:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION:-7.10.2}
+    volumes:
+      - certs:/usr/share/elasticsearch/config/certs
+    user: "0"
+    command: >
+      bash -c '
+        if [ x${ELASTIC_PASSWORD:-elasticpassword} == x ]; then
+          echo "Set the ELASTIC_PASSWORD environment variable in the .env file";
+          exit 1;
+        fi;
+        if [ ! -f config/certs/ca.zip ]; then
+          echo "Creating CA";
+          bin/elasticsearch-certutil ca --silent --pem -out config/certs/ca.zip;
+          unzip config/certs/ca.zip -d config/certs;
+        fi;
+        if [ ! -f config/certs/certs.zip ]; then
+          echo "Creating certs";
+          echo -ne \
+          "instances:\n"\
+          "  - name: es01\n"\
+          "    dns:\n"\
+          "      - es01\n"\
+          "      - localhost\n"\
+          "    ip:\n"\
+          "      - 127.0.0.1\n"\
+          "  - name: es02\n"\
+          "    dns:\n"\
+          "      - es02\n"\
+          "      - localhost\n"\
+          "    ip:\n"\
+          "      - 127.0.0.1\n"\
+          > config/certs/instances.yml;
+          bin/elasticsearch-certutil cert --silent --pem -out config/certs/certs.zip --in config/certs/instances.yml --ca-cert config/certs/ca/ca.crt --ca-key config/certs/ca/ca.key;
+          unzip config/certs/certs.zip -d config/certs;
+        fi;
+        echo "Setting file permissions"
+        chown -R root:root config/certs;
+        find . -type d -exec chmod 750 \{\} \;;
+        find . -type f -exec chmod 640 \{\} \;;
+
+        echo "All done!";
+      '
+    healthcheck:
+      test: ["CMD-SHELL", "[ -f config/certs/es01/es01.crt ]"]
+      interval: 1s
+      timeout: 5s
+      retries: 120
+
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION:-7.10.2}
+    container_name: es01
+    environment:
+      - node.name=es01
+      - discovery.seed_hosts=es02
+      - cluster.initial_master_nodes=es01,es02
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+
+      - xpack.security.http.ssl.key=certs/es01/es01.key
+      - xpack.security.http.ssl.certificate=certs/es01/es01.crt
+      - xpack.security.transport.ssl.key=certs/es01/es01.key
+      - xpack.security.transport.ssl.certificate=certs/es01/es01.crt
+
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD:-elasticpassword}
+
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es01-data:/usr/share/elasticsearch/data
+      - certs:/usr/share/elasticsearch/config/certs
+      - ../elastic-backend/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+    networks:
+      - asr
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  es02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION:-7.10.2}
+    container_name: es02
+    environment:
+      - node.name=es02
+      - discovery.seed_hosts=es01
+      - cluster.initial_master_nodes=es01,es02
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+
+      - xpack.security.http.ssl.key=certs/es02/es02.key
+      - xpack.security.http.ssl.certificate=certs/es02/es02.crt
+      - xpack.security.transport.ssl.key=certs/es02/es02.key
+      - xpack.security.transport.ssl.certificate=certs/es02/es02.crt
+
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD:-elasticpassword}
+
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es02-data:/usr/share/elasticsearch/data
+      - certs:/usr/share/elasticsearch/config/certs
+      - ../elastic-backend/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+    networks:
+      - asr
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  certs:
+  es01-data:
+  es02-data:
+  generated-keys:
+
+networks:
+  asr:
+    driver: bridge

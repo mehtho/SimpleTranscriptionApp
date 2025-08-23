@@ -1,8 +1,10 @@
+###############################################################################
 # Script to set up a development environment
-
-# This script creates a heavy but fully loaded dev environment with all the tools
-# needs to develop this project. A lighter version will be used to spin up demo
-# environments.
+#
+# This script creates a heavy but fully loaded dev environment with all the
+# tools needed to develop this project. A lighter version will be used to spin
+# up demo environments.
+###############################################################################
 
 # Disable interactive prompts
 sudo debconf-set-selections <<< "* libraries/restart-without-asking boolean true"
