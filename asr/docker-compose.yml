@@ -1,3 +1,14 @@
+###############################################################################
+# ASR API - FastAPI Transcription Service
+#
+# Spins up only the ASR API service on ${ASR_PORT:-8001}, exposing models
+# from ../models into the container.
+#
+# Best used together with the demo-client that transcribes files in the
+# test dataset
+#
+###############################################################################
+
 services:
   asr_api:
     build:
