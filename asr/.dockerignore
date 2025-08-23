@@ -13,3 +13,6 @@
 
 # Other unnecessary files everywhere
 **/requirements.txt
+
+# Demo Client
+demo-client

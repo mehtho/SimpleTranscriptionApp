@@ -9,10 +9,10 @@ from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
 
-IN_CSV = "../test_data/cv-valid-dev.csv"
+IN_CSV = "../../test_data/cv-valid-dev.csv"
 TEMP_CSV = "./temp-cv-valid-dev.csv"
 
-TEST_DATA_DIR = "../test_data/"
+TEST_DATA_DIR = "../../test_data/"
 FILE_NAME_COL = "filename"
 
 NUM_MANDATORY_ARGS = 2
@@ -64,8 +64,8 @@ if __name__ == "__main__":
     )
 
     if len(sys.argv) != NUM_MANDATORY_ARGS:
-        logger.error("Usage: python test_asr.py <BASE_URL>")
-        logger.error("Example: python test_asr.py http://localhost:8001")
+        logger.error("Usage: python cv-decode.py <BASE_URL>")
+        logger.error("Example: python cv-decode.py http://localhost:8001")
         sys.exit(1)
 
     base_url = sys.argv[1].rstrip("/")

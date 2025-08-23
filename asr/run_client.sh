@@ -7,5 +7,5 @@
 # Defaults to http://localhost:8001 if no argument is provided.
 ###############################################################################
 
-uv sync
-uv run python cv-decode.py "${1:-http://localhost:8001}"
+cd demo-client && \
+    uv run python cv-decode.py "${1:-http://localhost:8001}"

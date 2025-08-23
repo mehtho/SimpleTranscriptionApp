@@ -1,2 +1,13 @@
-fastapi[standard]==0.116.1
-uvicorn[standard]==0.35.0
+# Core dependencies
+fastapi[standard]==0.115.6
+
+# Testing dependencies
+pytest==8.4.1
+
+# Inference dependencies (CPU only)
+# Use the PyTorch CPU index for torch/torchaudio/torchcodec if using pip instead of uv:
+#   pip install -r requirements.txt -f https://download.pytorch.org/whl/cpu
+transformers==4.55.2
+torch==2.8.0
+torchaudio==2.8.0
+torchcodec==0.6.0
