@@ -40,5 +40,5 @@
 ├── pytest.ini                      # End to end testing configuration
 │
 ├── run_client.sh                   # Runs the demo-client app that transcribes 4076 audio files from Common Voice
-└──run_tests.sh                     # Runs local end to end tests    
+└── run_tests.sh                    # Runs local end to end tests    
 ```
