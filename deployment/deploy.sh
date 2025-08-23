@@ -12,6 +12,7 @@
 
 cd terraform
 
+export ARM_SUBSCRIPTION_ID=$(az account show --query id -o tsv)
 terraform init && \
     terraform apply --auto-approve
 
