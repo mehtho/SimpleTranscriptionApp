@@ -1,53 +1,25 @@
 ###############################################################################
-# Docker Compose for search-ui (and the elastic backend it depends on)
+# Elastic Backend Stack
 #
-# Services:
-#   - search-ui : React-based frontend (served on ${SEARCH_UI_PORT:-3000}),
-#                 connects to Elasticsearch for queries and results.
-# 
-# Dependency Services:
-#   - uploader  : Backend service to upload CSV data into Elasticsearch,
-#                 requires ES cluster to be healthy.
+# This compose file:
+#   - Creates a 2-node Elasticsearch cluster (es01, es02) with TLS enabled
+#   - Runs a setup job to generate CA and node certificates
+#   - Launches an uploader service that loads demo data
+#   - Writes a demo API key into ./keys/api-key.txt (host-visible)
 #
-#   - setup     : One-off initialization job to generate CA and TLS certs
-#                 for Elasticsearch nodes (es01, es02).
+# Test the API key with:
 #
-#   - es01      : First Elasticsearch node (master-eligible, data node).
+#   curl -k \
+#     -H "Authorization: ApiKey <Key>" \
+#     https://localhost:9200/
 #
-#   - es02      : Second Elasticsearch node (master-eligible, data node).
-#
-# Volumes:
-#   certs, es01-data, es02-data, generated-keys
-#
-# Network:
-#   asr (bridge)
 ###############################################################################
 
 services:
-  search-ui:
-    image: ghcr.io/mehtho/search-ui:latest
-    build:
-      context: ./search-ui
-      dockerfile: Dockerfile
-    container_name: search-ui
-    environment:
-      - NODE_ENV=production
-      - SYS_PUBLIC_IP=${SYS_PUBLIC_IP:-172.191.12.215}
-      - SEARCH_UI_PORT=${SEARCH_UI_PORT:-3000}
-      - ES_PORT=${ES_PORT:-9200}
-    ports:
-      - "${SEARCH_UI_PORT:-3000}:${SEARCH_UI_PORT:-3000}"
-    depends_on:
-      - es01
-    volumes:
-      - generated-keys:/app/keys:ro
-    networks:
-      - asr
-
   uploader:
     image: ghcr.io/mehtho/uploader:latest
     build:
-      context: ../elastic-backend
+      context: .
       dockerfile: Dockerfile
     depends_on:
       es01:
@@ -57,8 +29,9 @@ services:
     networks:
       - asr
     volumes:
-      - ../elastic-backend/cv-valid-dev.csv:/app/cv-valid-dev.csv:ro
+      - ./cv-valid-dev.csv:/app/cv-valid-dev.csv:ro
       - generated-keys:/app/keys
+      - ./keys:/app/keys
     environment:
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD:-elasticpassword}
 
@@ -134,7 +107,7 @@ services:
     volumes:
       - es01-data:/usr/share/elasticsearch/data
       - certs:/usr/share/elasticsearch/config/certs
-      - ../elastic-backend/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     networks:
       - asr
     ports:
@@ -172,7 +145,7 @@ services:
     volumes:
       - es02-data:/usr/share/elasticsearch/data
       - certs:/usr/share/elasticsearch/config/certs
-      - ../elastic-backend/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     networks:
       - asr
     healthcheck:

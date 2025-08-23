@@ -228,4 +228,7 @@ terraform.*
 *.terraform*
 *.pem
 
+# Elasticsearch demo files
+api-key.txt
+
 # =========== CUSTOM gitignores end.  ===========

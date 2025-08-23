@@ -1,3 +1,27 @@
+###############################################################################
+# All-in-One Master Docker Compose
+#
+# Spins up the full system:
+#   - ASR API service (asr_api) on ${ASR_PORT:-8001}
+#   - React search frontend (search-ui) on ${SEARCH_UI_PORT:-3000}
+#   - Uploader service to load demo CSV data
+#   - Elasticsearch 2-node cluster (es01, es02) with TLS enabled
+#   - One-time setup job to generate CA + node certificates
+#
+# Notes:
+#   - Port 9200 is mapped to localhost for internal demo purposes
+#   - In production deployments via Terraform, port 9200 is CLOSED
+#     to prevent direct external access to Elasticsearch
+#
+# Test with an API key:
+#
+#   curl -k \
+#     -H "Authorization: ApiKey <Key>" \
+#     https://localhost:9200/
+#
+###############################################################################
+
+
 services:
   asr_api:
     image: ghcr.io/mehtho/asr:latest
@@ -126,6 +150,8 @@ services:
       - ./elastic-backend/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     networks:
       - asr
+    ports:
+      - "${ES_PORT:-9200}:9200"
     healthcheck:
       test:
         [
