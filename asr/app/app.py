@@ -9,5 +9,5 @@ def ping() -> str:
     """Return simple health check message."""
     return "pong"
 
-# include the ASR routes
+# Include the transcription routes in asr_api.py
 app.include_router(asr_router)

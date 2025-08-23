@@ -1,4 +1,13 @@
-"""A demonstration test script that calls the ASR API."""
+"""A demonstration test script that calls the ASR API.
+
+This script runs a test client against the ASR API.
+Usage:
+    uv run python cv-decode.py <BASE_URL>
+Example:
+    uv run python cv-decode.py http://localhost:8001
+
+<BASE_URL> should point to the ASR API service url
+"""
 import csv
 import logging
 import sys
@@ -24,6 +33,8 @@ def call_api(audio_path: str, url: str) -> tuple[str, float]:
         resp = requests.post(url, files=files, timeout=60)
         resp.raise_for_status()
         resp_json = resp.json()
+
+    # Extract just the transcription and duration
     return resp_json["transcription"], resp_json["duration"]
 
 
@@ -34,10 +45,13 @@ def main(base_url: str) -> None:
     try:
         total_rows = sum(1 for _ in Path.open(IN_CSV, encoding="utf-8")) - 1
 
+        # Writes to an intermediate TEMP_CSV to avoid corrupting the original
         with Path.open(IN_CSV, "r", newline="", encoding="utf-8") as file_in, \
              Path.open(TEMP_CSV, "w", newline="", encoding="utf-8") as file_out:
 
             reader = csv.DictReader(file_in)
+
+            # Add the generated_text column if it doesn't already exist
             fieldnames = list(reader.fieldnames)
             if "generated_text" not in fieldnames:
                 fieldnames.append("generated_text")
@@ -45,6 +59,8 @@ def main(base_url: str) -> None:
             writer = csv.DictWriter(file_out, fieldnames=fieldnames)
             writer.writeheader()
 
+            # For each row in the original, add the generated_txt col
+            # with the transcribed text
             for row in tqdm(reader, total=total_rows, desc="Processing", unit="row"):
                 mp3_path = "cv-valid-dev/" + row.get(FILE_NAME_COL).strip()
                 row["generated_text"], row["duration"] = call_api(
@@ -52,8 +68,10 @@ def main(base_url: str) -> None:
                 )
                 writer.writerow(row)
 
+            # Replaces the original with the temp file (POSIX atomic operation)
             Path(TEMP_CSV).replace(IN_CSV)
     finally:
+        # Upon completion or any failure, delete the temp file
         Path.unlink(TEMP_CSV, missing_ok=True)
 
 

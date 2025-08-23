@@ -1,5 +1,5 @@
 ###############################################################################
-# All-in-One Master Docker Compose
+# All-in-One Master Docker Compose. Use to demonstrate the system locally.
 #
 # Spins up the full system:
 #   - ASR API service (asr_api) on ${ASR_PORT:-8001}
