@@ -57,3 +57,17 @@ Do note that for security reasons, port 9200 is never exposed to the open intern
 
 ### For Development
 Run the `setup_dev_env.sh` script to download all dependencies on your local machine to enable development. This includes...
+
+## Directory Structure
+```
+.
+├── asr/                    # ASR API service and demo client
+├── elastic-backend/        # Elasticsearch cluster and uploader
+├── search-ui/              # React frontend (submodule fork)
+├── deployment/             # Terraform scripts for Azure deployment
+├── linter/                 # Ruff linter configuration
+├── demo-client/            # Simple ASR API test client
+├── .github/workflows/      # GitHub Actions CI/CD definitions
+├── docker-compose.yml      # All-in-one local demo Compose
+└── README.md               # Top-level project overview
+```
