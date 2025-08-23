@@ -9,9 +9,11 @@
 #
 # Test the API key with:
 #
-#   curl -k \
-#     -H "Authorization: ApiKey <Key>" \
-#     https://localhost:9200/
+#   curl -k -H "Authorization: ApiKey <Key>" https://localhost:9200/
+#
+# or use the default username and password with
+#
+#   curl -k -u elastic:elasticpassword https://localhost:9200/
 #
 ###############################################################################
 
