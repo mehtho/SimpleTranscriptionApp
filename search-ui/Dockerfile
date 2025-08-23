@@ -21,10 +21,13 @@ WORKDIR /app
 # Copy build artifacts and server code
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/node_modules ./node_modules
+
+# Copy proxy code (protects underlying elastic search instance)
 COPY app/proxy.js ./proxy.js
 
 EXPOSE 3000
 
+# Ignore the self-signed cert alerts
 ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 
 # Start only Express proxy (serves API + frontend)

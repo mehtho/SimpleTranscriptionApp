@@ -69,3 +69,6 @@ sudo sysctl -w vm.max_map_count=262144
 # - terraform (for demo deployments)
 (sudo apt-get update && \
     sudo apt-get install -y unzip ffmpeg terraform)
+
+# Pull submodules (Search ui)
+git submodule update --init --recursive
