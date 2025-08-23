@@ -23,6 +23,7 @@
 - `sudo docker compose up --build` to create the ASR service
 - `./run_client.sh` to run the transcription client that transcribes 4076 audio files in the Common Voice dataset
 - `./run_tests.sh` to run a local end to end test
+- `./demo_curl_script.sh` to use `curl` for a quick demonstration
 
 ## File Structure
 ```
