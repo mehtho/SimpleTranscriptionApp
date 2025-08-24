@@ -58,7 +58,22 @@ Replace the IP addresses shown in the section above with the one shown by terraf
 Do note that for security reasons, port 9200 is never exposed to the open internet. However, it can be accessed directly when deployed locally.
 
 ### For Development
-Run the `setup_dev_env.sh` script to download all dependencies on your local machine to enable development. This includes...
+Run the `setup_dev_env.sh` script to download all dependencies on your local machine to enable development. This includes:
+
+1. **git** – version control  
+2. **git-lfs** – large file storage (for models/data)  
+3. **Docker** – containerization  
+4. **Docker Compose** – multi-container orchestration  
+5. **UV** – Python package manager  
+6. **Node.js (v22)** – runtime for search-ui  
+7. **Yarn** – Node.js package manager  
+8. **Python dependencies** – for ASR and linter services  
+9. **Azure CLI** – for demo deployments  
+10. **Terraform** – infrastructure as code (for demo deployments)  
+11. **unzip** – dataset extraction  
+12. **ffmpeg** – audio processing for transcription  
+13. **Downloaded models and datasets** – for testing  
+14. **Git submodules** – initializes search-ui and other project modules
 
 ## Directory Structure
 ```

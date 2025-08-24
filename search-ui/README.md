@@ -14,9 +14,9 @@ The Search UI is designed to interact securely with the Elasticsearch backend:
    - **Frontend**: A React-based interface that users interact with.  
    - **Proxy**: A lightweight server that handles requests to Elasticsearch.  
      - The proxy attaches an Elasticsearch API key to requests, preventing the frontend from storing or exposing the key.  
-     - This enables port `9200` to be closed, ensuring Elasticsearch is never directly exposed to the internet.
+     - This allows port `9200` to remain closed, ensuring Elasticsearch is never directly exposed to the internet.
 
-3. **AuthN integration (Future Work)**  
+3. **Authentication integration (Future Work)**  
    - When combined with an authentication service, the frontend can require login and securely delegate token handling.  
    - This results in a setup where authentication and authorization are managed by a dedicated service, further reducing risk.
 
@@ -38,7 +38,7 @@ The Search UI is designed to interact securely with the Elasticsearch backend:
 .
 ├── Dockerfile
 ├── README.md
-├── run_searchui.sh         # Convenience script to pull the submodule and run the setup
-├── app                     # Submodule located here
+├── run_searchui.sh         # Convenience script to pull the submodule and run search-ui + elastic backend
+├── app                     # Submodule gets checked out here
 └── docker-compose.yml      # Docker compose for search-ui app
 ```

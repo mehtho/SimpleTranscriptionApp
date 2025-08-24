@@ -34,7 +34,7 @@ You can authenticate with Elasticsearch using either of these methods:
 ├── README.md
 ├── config
 │   └── elasticsearch.yml   # Elastic search config file
-├── cv-index.py             # Indexes the cs-valid-dev.csv in the elastic search instance
+├── cv-index.py             # Indexes cv-valid-dev.csv in the elastic search instance
 ├── cv-valid-dev.csv        # Transcription results
 ├── docker-compose.yml      # Backend-only docker compose
 ├── pyproject.toml          # Dependencies for the uploader

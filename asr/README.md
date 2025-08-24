@@ -13,7 +13,7 @@
   - `duration`: Audio duration in seconds
 
 ## Demo Client
-2d: Uses the downloaded Common Voice dataset to generated transcribed text from
+2d: Uses the downloaded Common Voice dataset to generate transcribed text from
     the API into a new column in `cv-valid-dev.csv`
 
 ## Containerization

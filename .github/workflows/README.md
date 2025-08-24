@@ -18,4 +18,4 @@ By pre-building and publishing containers, the Terraform deployment is simplifie
   2. Pull the published images,
   3. Run the root-level Docker Compose.
 
-This separation makes the VM faster to instaniate, and prevents us from having to maintain a separate set of deployment environment dependencies since the containers are all-inclusive.
+This separation makes the VM faster to instantiate, and prevents us from having to maintain a separate set of deployment environment dependencies since the containers are all-inclusive.

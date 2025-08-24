@@ -12,8 +12,8 @@ Once complete, you can access:
 For debugging or experimentation, you may also connect directly to the VM via SSH using the output command provided by Terraform.
 
 ## Usage
-Log into azure with `login.sh`
-Run the deployment with `deploy.sh`
+After installing terraform (e.g., from the development environment setup script), 
+log into Azure with `login.sh`, and run the deployment with `deploy.sh`
 
 ## Contents
 ```
@@ -29,5 +29,5 @@ Run the deployment with `deploy.sh`
 ```
 
 ## Notes on the load balancer
-Although the guidelines specify avoiding managed components, a load balancer is included.
+Although the project guidelines specify avoiding managed components, a load balancer is included.
 This is required for compatibility with HTX’s Sandpit Azure environment, which does not allow VMs to have direct public IPs. The load balancer functions purely as a reverse proxy to enable access and does not provide any additional functionality.
