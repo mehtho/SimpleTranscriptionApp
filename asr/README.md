@@ -21,7 +21,7 @@
 
 ## Usage
 - `sudo docker compose up --build` to create the ASR service
-- `./run_client.sh` to run the transcription client that transcribes 4076 audio files in the Common Voice dataset against a given IP address (See script for details)
+- `./run_client.sh http://<IP>:<PORT>` to run the transcription client that transcribes 4076 audio files in the Common Voice dataset against a given IP address (See script for details)
 - `./run_tests.sh` to run a local end to end test
 - `./demo_curl_script.sh` to use `curl` for a quick demonstration
 
