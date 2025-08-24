@@ -2,7 +2,7 @@
 # All-in-One Master Docker Compose. Use to demonstrate the system locally.
 #
 # Spins up the full system:
-#   - ASR API service (asr_api) on ${ASR_PORT:-8001}
+#   - ASR API service (asr-api) on ${ASR_PORT:-8001}
 #   - React search frontend (search-ui) on ${SEARCH_UI_PORT:-3000}
 #   - Uploader service to load demo CSV data
 #   - Elasticsearch 2-node cluster (es01, es02) with TLS enabled
@@ -23,12 +23,12 @@
 
 
 services:
-  asr_api:
+  asr-api:
     image: ghcr.io/mehtho/asr:latest
     build:
       context: ./asr
       dockerfile: Dockerfile
-    container_name: asr_api
+    container_name: asr-api
     ports:
       - "${ASR_PORT:-8001}:8001"
     volumes:

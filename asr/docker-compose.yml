@@ -10,11 +10,11 @@
 ###############################################################################
 
 services:
-  asr_api:
+  asr-api:
     build:
       context: .
       dockerfile: Dockerfile
-    image: asr_api
+    image: asr-api
     container_name: asr_api
     ports:
       - "${ASR_PORT:-8001}:8001"

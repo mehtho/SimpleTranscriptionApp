@@ -11,7 +11,7 @@ env:
   IMAGE_OWNER: ${{ github.repository_owner }}
 
 jobs:
-  asr:
+  asr-api:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -39,10 +39,10 @@ jobs:
           context: ./asr
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/asr:latest
-            ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/asr:${{ github.sha }}
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/asr:buildcache
-          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/asr:buildcache,mode=max
+            ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/asr-api:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/asr-api:${{ github.sha }}
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/asr-api:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/asr-api:buildcache,mode=max
 
   search-ui:
     runs-on: ubuntu-latest

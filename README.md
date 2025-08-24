@@ -78,13 +78,19 @@ Run the `setup_dev_env.sh` script to download all dependencies on your local mac
 ## Directory Structure
 ```
 .
-├── asr/                    # ASR API service and demo client
-├── elastic-backend/        # Elasticsearch cluster and uploader
-├── search-ui/              # React frontend (submodule fork)
-├── deployment/             # Terraform scripts for Azure deployment
-├── linter/                 # Ruff linter configuration
-├── demo-client/            # Simple ASR API test client
-├── .github/workflows/      # GitHub Actions CI/CD definitions
-├── docker-compose.yml      # All-in-one local demo Compose
-└── README.md               # Top-level project overview
+├── asr/                      # ASR API service and demo client
+├── elastic-backend/          # Elasticsearch cluster and uploader
+├── search-ui/                # React frontend (submodule fork)
+├── deployment/               # Terraform scripts for Azure deployment
+├── linter/                   # Ruff linter configuration
+├── demo-client/              # Simple ASR API test client
+├── .github/workflows/        # GitHub Actions CI/CD definitions
+│
+├── .env.example              # An example .env file (Rename a copy to .env)
+├── quickstart_local.sh       # Quickly sets up a local demo
+├── setup_dev_env.sh          # Downloads dependencies needed for local development
+├── dl_models_and_dataset.sh  # Downloads models and the common voice dataset
+│
+├── docker-compose.yml        # All-in-one local demo Compose
+└── README.md                 # Top-level project overview
 ```
