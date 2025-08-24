@@ -11,9 +11,7 @@ The aforementioned components are supported by
 - GitHub Actions and GitHub Container Registry Integration
 - The ruff linter
 
-## LINK BELOW!
-
-http://4.194.66.13:3000/
+Link: `http://4.194.66.13:3000/`
 
 ---
 
@@ -43,7 +41,7 @@ http://4.194.66.13:3000/
 ## Trying the Application
 The system is deployed at
 - `http://4.194.66.13:3000` for the Search UI (Use a browser)
-- `http://<IP ADDR>:8001` for the ASR endpoint (Use the demo client in `asr/democlient` or `curl` commands)
+- `http://4.194.66.13:8001` for the ASR endpoint (Use the demo client in `asr/democlient` or `curl` commands)
 
 ## Running the Application yourself...
 ### Locally
